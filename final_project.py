@@ -87,6 +87,7 @@ def substitution(line):
             inst = "000000" + registers[line_split[1]] + "00000" + "00000" + "00000" + op_func[0]
             
         print(hex(int(inst,2)))
+        saida.append(hex(int(inst,2)))
                      
     elif(line_split[0] in type_i.keys()):
         print("Tipo I")
@@ -98,6 +99,7 @@ def substitution(line):
                 
             inst =  op_func[0] + registers[line_split[2]] + registers[line_split[1]] + '{0:016b}'.format(int(line_split[3]))
             print(hex(int(inst,2)))
+            saida.append(hex(int(inst,2)))
             
         elif(op_func[1] == "LS"):
             i,s,_ = re.split('[()]',line_split[-1])
@@ -105,6 +107,7 @@ def substitution(line):
                 i = complemento2(i)
             inst =  op_func[0] + registers[s] + registers[line_split[1]] + '{0:016b}'.format(int(i))
             print(hex(int(inst,2)))
+            saida.append(hex(int(inst,2)))
             
         elif(op_func[1] == "B"):
             #label = labels[op_func-1] TO DO
@@ -123,12 +126,25 @@ def substitution(line):
 
 
 #instruction[0] in type_r.keys() Idéia para identificação do tipo da operação
-#file = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/input.txt'
-file = './input.txt'
+file = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/input.txt'
+#file = './input.txt'
+#file1 = './output.txt'
+arquivo = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/output.txt'
+
+saida = []
 
 with open(file, 'r') as input_file:
     for line in input_file:
         line = line.replace('\n','')
         line = line.replace(',',' ')
         substitution(line)
+
+print("SAIDA FINAL", saida)
+
+output_file = open(arquivo, "w+")
+
+for out in saida:
+    output_file.writelines(out + '\n')
+
+arquivo.close()
     
