@@ -57,5 +57,15 @@ registers = {
     
     '$ra'  :"0b11111"}
 
+def substitution(line):
+    line_split = line.split()
+    #for
 
 #instruction[0] in type_r.keys() Idéia para identificação do tipo da operação
+file = './input.txt'
+with open(file, 'r') as input_file:
+    for line in input_file:
+        line = line.replace('\n','')
+        print(line)
+        substitution(line)
+    
