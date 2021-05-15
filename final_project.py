@@ -1,78 +1,87 @@
-type_r = {"add":"0b100000",
-          "sub":"0b100010",
-          "and":"0b100100",
-          "or" :"0b100101",
-          "sll":"0b000000",
-          "slr":"0b000010",
-          "slt":"0b101010",
-          "jr" :"0b001000"}
+type_r = {"add":["100000","AL"],
+          "sub":["100010","AL"],
+          "and":["100100","AL"],
+          "or" :["100101","AL"],
+          "sll":["000000", "S"],
+          "slr":["000010", "S"],
+          "slt":["101010","AL"],
+          "jr" :["001000","JR"]}
 
-type_i = {"addi":"0b001000",
-          "subi":"",#TO-DO
-          "lw"  :"0b100011",
-          "lb"  :"0b100000",
-          "sb"  :"0b101000",
-          "andi":"0b001100",
-          "ori" :"0b001101",
-          "beq" :"0b000100",
-          "bne" :"0b000101",
-          "slti":"0b001010"}
+type_i = {"addi":["001000","AL"],
+          "subi":["",""],#TO-DO
+          "lw"  :["100011","LS"],
+          "lb"  :["100000","LS"],
+          "sb"  :["101000","LS"],
+          "andi":["001100","AL"],
+          "ori" :["001101","AL"],
+          "beq" :["000100","B"],
+          "bne" :["000101","B"],
+          "slti":["001010","AL"]}
 
-type_j = {"j"  :"0b000010",
-          "jal":"0b000011"}
+type_j = {"j"  :"000010",
+          "jal":"000011"}
 
 registers = {
-    "$zero":"0b0",
+    "$zero":"00000",
     
-    "$v0"  :"0b10",
-    "$v1"  :"0b11",
+    "$v0"  :"00010",
+    "$v1"  :"00011",
     
-    "$a0"  :"0b100",
-    "$a1"  :"0b101",
-    "$a2"  :"0b110",
-    "$a3"  :"0b111",
+    "$a0"  :"00100",
+    "$a1"  :"00101",
+    "$a2"  :"00110",
+    "$a3"  :"00111",
     
-    "$t0"  :"0b1000",
-    "$t1"  :"0b1001",
-    "$t2"  :"0b1010",
-    "$t3"  :"0b1011",
-    "$t4"  :"0b1100",
-    "$t5"  :"0b1101",
-    "$t6"  :"0b1110",
-    "$t7"  :"0b1111",
+    "$t0"  :"01000",
+    "$t1"  :"01001",
+    "$t2"  :"01010",
+    "$t3"  :"01011",
+    "$t4"  :"01100",
+    "$t5"  :"01101",
+    "$t6"  :"01110",
+    "$t7"  :"01111",
     
-    "$s0"  :"0b10000",
-    "$s1"  :"0b10001",
-    "$s2"  :"0b10010",
-    "$s3"  :"0b10011",
-    "$s4"  :"0b10100",
-    "$s5"  :"0b10101",
-    "$s6"  :"0b10110",
-    "$s7"  :"0b10111",
+    "$s0"  :"10000",
+    "$s1"  :"10001",
+    "$s2"  :"10010",
+    "$s3"  :"10011",
+    "$s4"  :"10100",
+    "$s5"  :"10101",
+    "$s6"  :"10110",
+    "$s7"  :"10111",
     
-    "$t8"  :"0b11000",
-    "$t9"  :"0b11001",
+    "$t8"  :"11000",
+    "$t9"  :"11001",
     
-    '$sp'  :"0b11101",
+    '$sp'  :"11101",
     
-    '$ra'  :"0b11111"}
+    '$ra'  :"11111"}
 
 def substitution(line):
     print("AQUIII: " + line)
     line_split = line.split()
     
+    
     if(line_split[0] in type_r.keys()):
         print("Tipo R")
-
+        op_func = type_r[line_split[0]]
+        #if(type_r[line_split[0]][1]) == "AL"):
+            
     elif(line_split[0] in type_i.keys()):
         print("Tipo I")
+        op_func = type_i[line_split[0]]
+        if(op_func[1] == "AL"):
+            inst =  op_func[0] + registers[line_split[2]] + registers[line_split[1]] + '{0:016b}'.format(int(line_split[3]))
+            print(hex(int(inst,2)))
 
     elif(line_split[0] in type_j.keys()):
         print("Tipo J")
+        op_func = type_j[line_split[0]]
 
 
 #instruction[0] in type_r.keys() Idéia para identificação do tipo da operação
-file = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/input.txt'
+#file = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/input.txt'
+file = './input.txt'
 
 with open(file, 'r') as input_file:
     for line in input_file:
@@ -80,4 +89,5 @@ with open(file, 'r') as input_file:
         line = line.replace(',',' ')
         #print(line)
         substitution(line)
+        break
     
