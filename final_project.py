@@ -72,23 +72,6 @@ def complemento2(value):
     return soma
 def substitution(line):
     line_split = line.split()
-<<<<<<< HEAD
-    
-    if(line_split[0] in type_r.keys()):
-        print("Tipo R")
-        op_func = type_r[line_split[0]]
-        
-        if(op_func[1] == "AL"):
-            inst = "000000" + registers[line_split[2]] + registers[line_split[3]] + registers[line_split[1]] + "00000" + op_func[0]
-            print(hex(int(inst,2)))
-        
-        elif(op_func[1] == "S"):
-            inst = "000000" + "000000" + registers[line_split[2]] + registers[line_split[1]] + "00100" + op_func[0]
-        
-        elif(op_func[1] == "JR"):
-            inst = "000000" + registers[line_split[1]] + "00000" + "00000" + "00000" + op_func[0]
-
-=======
     print(line_split)
     if(line_split[0] in type_r.keys()):
         print("Tipo R")
@@ -105,7 +88,6 @@ def substitution(line):
             
         print(hex(int(inst,2)))
                      
->>>>>>> 0de1d52c9c4bf2fbccd381ae843ca2e458e6196c
     elif(line_split[0] in type_i.keys()):
         print("Tipo I")
         op_func = type_i[line_split[0]]
@@ -141,8 +123,8 @@ def substitution(line):
 
 
 #instruction[0] in type_r.keys() Idéia para identificação do tipo da operação
-file = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/input.txt'
-#file = './input.txt'
+#file = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/input.txt'
+file = './input.txt'
 
 with open(file, 'r') as input_file:
     for line in input_file:
