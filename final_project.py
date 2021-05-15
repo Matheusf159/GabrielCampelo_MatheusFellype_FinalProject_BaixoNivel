@@ -61,9 +61,10 @@ registers = {
     '$ra'  :"11111"}
 
 def complemento2(value):
+    value = '{0:016b}'.format(int(value)*-1)
     new = ''
     for i in value:
-        if(i == 0):
+        if(i == '0'):
             new += '1'
         else:
             new += '0'
