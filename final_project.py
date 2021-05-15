@@ -58,11 +58,18 @@ registers = {
     '$ra'  :"0b11111"}
 
 def substitution(line):
-    #print("AQUIII: " + line)
+    print("AQUIII: " + line)
     line_split = line.split()
     
-    for word in line_split:
-        print(word)
+    if(line_split[0] in type_r.keys()):
+        print("Tipo R")
+
+    elif(line_split[0] in type_i.keys()):
+        print("Tipo I")
+
+    elif(line_split[0] in type_j.keys()):
+        print("Tipo J")
+
 
 #instruction[0] in type_r.keys() Idéia para identificação do tipo da operação
 file = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/input.txt'
