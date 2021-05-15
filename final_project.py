@@ -60,6 +60,10 @@ registers = {
     
     '$ra'  :"11111"}
 
+labels = {}
+
+line_n = 0x00400024
+
 def complemento2(value):
     value = '{0:016b}'.format(int(value)*-1)
     new = ''
@@ -70,6 +74,7 @@ def complemento2(value):
             new += '0'
     soma = int(new,2)+1
     return soma
+
 def substitution(line):
     line_split = line.split()
     print(line_split)
@@ -90,6 +95,7 @@ def substitution(line):
         saida.append(hex(int(inst,2)))
                      
     elif(line_split[0] in type_i.keys()):
+        
         print("Tipo I")
         op_func = type_i[line_split[0]]
         
@@ -110,7 +116,7 @@ def substitution(line):
             saida.append(hex(int(inst,2)))
             
         elif(op_func[1] == "B"):
-            #label = labels[op_func-1] TO DO
+            #label = labels[op_func-1]
             #if int(line_split[3]) < 0:
             #    line_split[3] = complemento2(line_split[3])
             #inst =  op_func[0] + registers[line_split[1]] + registers[line_split[2]] #+ '{0:016b}'.format(int(i))
@@ -119,17 +125,16 @@ def substitution(line):
         #print(hex(int(inst,2)))
 
     elif(line_split[0] in type_j.keys()):
-        #print("Tipo J")
-        #op_func = type_j[line_split[0]]
-        print('nop')
-    
+        print("Tipo J")
+        op_func = type_j[line_split[0]]
+        inst = op_func + '{0:016b}'.format(int(labels[line_split[-1]]*4))
+        print(hex(int(inst,2)))
+        saida.append(hex(int(inst,2)))
 
-
-#instruction[0] in type_r.keys() Idéia para identificação do tipo da operação
-file = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/input.txt'
-#file = './input.txt'
-#file1 = './output.txt'
-arquivo = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/output.txt'
+#file = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/input.txt'
+file = './input.txt'
+arquivo = './output.txt'
+#arquivo = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/output.txt'
 
 saida = []
 
@@ -137,7 +142,21 @@ with open(file, 'r') as input_file:
     for line in input_file:
         line = line.replace('\n','')
         line = line.replace(',',' ')
+        valid = re.search('[\w]*[:\s*]$',line)
+        
+        if ((type(valid)) == re.Match):
+            lb = line.replace(':','')
+            labels[lb] = line_n
+        line_n += 4
+
+with open(file, 'r') as input_file:
+    line_n = 0x00400024
+    for line in input_file:
+        line = line.replace('\n','')
+        line = line.replace(',',' ')
         substitution(line)
+        line_n += 4
+        
 
 print("SAIDA FINAL", saida)
 
@@ -146,5 +165,5 @@ output_file = open(arquivo, "w+")
 for out in saida:
     output_file.writelines(out + '\n')
 
-arquivo.close()
+output_file.close()
 
