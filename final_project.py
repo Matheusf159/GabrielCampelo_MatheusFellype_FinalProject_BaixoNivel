@@ -58,14 +58,19 @@ registers = {
     '$ra'  :"0b11111"}
 
 def substitution(line):
+    #print("AQUIII: " + line)
     line_split = line.split()
-    #for
+    
+    for word in line_split:
+        print(word)
 
 #instruction[0] in type_r.keys() Idéia para identificação do tipo da operação
-file = './input.txt'
+file = 'C:/Users/mathe/Documents/GitHub/GabrielCampelo_MatheusFellype_FinalProject_BaixoNivel/input.txt'
+
 with open(file, 'r') as input_file:
     for line in input_file:
         line = line.replace('\n','')
-        print(line)
+        line = line.replace(',',' ')
+        #print(line)
         substitution(line)
     
