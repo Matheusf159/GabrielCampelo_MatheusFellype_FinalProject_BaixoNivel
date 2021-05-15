@@ -1,3 +1,5 @@
+import re
+
 type_r = {"add":["100000","AL"],
           "sub":["100010","AL"],
           "and":["100100","AL"],
@@ -10,6 +12,7 @@ type_r = {"add":["100000","AL"],
 type_i = {"addi":["001000","AL"],
           "subi":["",""],#TO-DO
           "lw"  :["100011","LS"],
+          "sw"  :["101011","LS"],
           "lb"  :["100000","LS"],
           "sb"  :["101000","LS"],
           "andi":["001100","AL"],
@@ -57,26 +60,65 @@ registers = {
     
     '$ra'  :"11111"}
 
+def complemento2(value):
+    new = ''
+    for i in value:
+        if(i == 0):
+            new += '1'
+        else:
+            new += '0'
+    soma = int(new,2)+1
+    return soma
 def substitution(line):
-    print("AQUIII: " + line)
     line_split = line.split()
-    
-    
+    print(line_split)
     if(line_split[0] in type_r.keys()):
         print("Tipo R")
         op_func = type_r[line_split[0]]
-        #if(type_r[line_split[0]][1]) == "AL"):
+
+        if(op_func[1] == "AL"):
+            inst = "000000" + registers[line_split[2]] + registers[line_split[3]] + registers[line_split[1]] + "00000" + op_func[0]
+
+        elif(op_func[1] == "S"):
+            inst = "000000" + "000000" + registers[line_split[2]] + registers[line_split[1]] + "00100" + op_func[0]
             
+        elif(op_func[1] == "JR"):
+            inst = "000000" + registers[line_split[1]] + "00000" + "00000" + "00000" + op_func[0]
+            
+        print(hex(int(inst,2)))
+                     
     elif(line_split[0] in type_i.keys()):
         print("Tipo I")
         op_func = type_i[line_split[0]]
+        
         if(op_func[1] == "AL"):
+            if int(line_split[3]) < 0:
+                line_split[3] = complemento2(line_split[3])
+                
             inst =  op_func[0] + registers[line_split[2]] + registers[line_split[1]] + '{0:016b}'.format(int(line_split[3]))
             print(hex(int(inst,2)))
+            
+        elif(op_func[1] == "LS"):
+            i,s,_ = re.split('[()]',line_split[-1])
+            if int(i) < 0:
+                i = complemento2(i)
+            inst =  op_func[0] + registers[s] + registers[line_split[1]] + '{0:016b}'.format(int(i))
+            print(hex(int(inst,2)))
+            
+        elif(op_func[1] == "B"):
+            #label = labels[op_func-1] TO DO
+            #if int(line_split[3]) < 0:
+            #    line_split[3] = complemento2(line_split[3])
+            #inst =  op_func[0] + registers[line_split[1]] + registers[line_split[2]] #+ '{0:016b}'.format(int(i))
+            #print(hex(int(inst,2)))
+            print('nop')
+        #print(hex(int(inst,2)))
 
     elif(line_split[0] in type_j.keys()):
-        print("Tipo J")
-        op_func = type_j[line_split[0]]
+        #print("Tipo J")
+        #op_func = type_j[line_split[0]]
+        print('nop')
+    
 
 
 #instruction[0] in type_r.keys() Idéia para identificação do tipo da operação
@@ -87,7 +129,5 @@ with open(file, 'r') as input_file:
     for line in input_file:
         line = line.replace('\n','')
         line = line.replace(',',' ')
-        #print(line)
         substitution(line)
-        break
     
