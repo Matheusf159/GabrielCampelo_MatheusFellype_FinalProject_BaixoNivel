@@ -147,4 +147,4 @@ for out in saida:
     output_file.writelines(out + '\n')
 
 arquivo.close()
-    
+
