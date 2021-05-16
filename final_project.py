@@ -7,7 +7,8 @@ type_r = {"add":["100000","AL"],
           "sll":["000000", "S"],
           "slr":["000010", "S"],
           "slt":["101010","AL"],
-          "jr" :["001000","JR"]}
+          "jr" :["001000","JR"],
+          "mul":["011100","AL","000010"]}
 
 type_i = {"addi":["001000","AL"],
           "subi":["",""],#TO-DO
@@ -62,7 +63,7 @@ registers = {
 
 labels = {}
 
-line_n = 0x00400024
+line_n = 0x00400000
 
 def complemento2(value):
     value = '{0:016b}'.format(int(value)*-1)
@@ -83,7 +84,10 @@ def substitution(line):
         op_func = type_r[line_split[0]]
 
         if(op_func[1] == "AL"):
-            inst = "000000" + registers[line_split[2]] + registers[line_split[3]] + registers[line_split[1]] + "00000" + op_func[0]
+            if line_split[0] == "mul":
+                inst = op_func[0] + registers[line_split[2]] + registers[line_split[3]] + registers[line_split[1]] + "00000" + op_func[2]
+            else:
+                inst = "000000" + registers[line_split[2]] + registers[line_split[3]] + registers[line_split[1]] + "00000" + op_func[0]
 
         elif(op_func[1] == "S"):
             inst = "000000" + "000000" + registers[line_split[2]] + registers[line_split[1]] + "00100" + op_func[0]
@@ -116,18 +120,15 @@ def substitution(line):
             saida.append(hex(int(inst,2)))
             
         elif(op_func[1] == "B"):
-            #label = labels[op_func-1]
-            #if int(line_split[3]) < 0:
-            #    line_split[3] = complemento2(line_split[3])
-            #inst =  op_func[0] + registers[line_split[1]] + registers[line_split[2]] #+ '{0:016b}'.format(int(i))
-            #print(hex(int(inst,2)))
-            print('nop')
-        #print(hex(int(inst,2)))
+            label = labels[line_split[-1]]
+            inst =  op_func[0] + registers[line_split[1]] + registers[line_split[2]] + '{0:016b}'.format(int(((label)-(line_n+4))/4))
+            print(hex(int(inst,2)))
+            saida.append(hex(int(inst,2)))
 
     elif(line_split[0] in type_j.keys()):
         print("Tipo J")
         op_func = type_j[line_split[0]]
-        inst = op_func + '{0:016b}'.format(int(labels[line_split[-1]]*4))
+        inst = op_func + '{0:026b}'.format(int(labels[line_split[-1]]/4))
         print(hex(int(inst,2)))
         saida.append(hex(int(inst,2)))
 
@@ -147,15 +148,18 @@ with open(file, 'r') as input_file:
         if ((type(valid)) == re.Match):
             lb = line.replace(':','')
             labels[lb] = line_n
-        line_n += 4
+        else:
+            line_n += 4
 
 with open(file, 'r') as input_file:
-    line_n = 0x00400024
+    line_n = 0x00400000
     for line in input_file:
         line = line.replace('\n','')
         line = line.replace(',',' ')
-        substitution(line)
-        line_n += 4
+        valid = re.search('[\w]*[:\s*]$',line)
+        if ((type(valid)) != re.Match):
+            substitution(line)
+            line_n += 4
         
 
 print("SAIDA FINAL", saida)

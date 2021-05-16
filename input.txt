@@ -1,6 +1,5 @@
-add $s2, $s0, $s1
 addi $a0,$zero,3
-fatorial: 
+fatorial:
 addi $sp, $sp, -8
 sw $ra, 4($sp)
 sw $a0, 0($sp)
